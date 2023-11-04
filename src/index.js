@@ -8,11 +8,14 @@ import CrawlNetTruyen from "./crawl/nettruyen.js";
 
 async function app() {
   const context = await getContext();
-  const page = await context.newPage();
 
-  const crawl = new CrawlNetTruyen(page, process.env.CRAWL_DOMAIN);
-
-  await page.close();
+  const resSupplier = await request({
+    method: "GET",
+    url: "/supplier",
+  });
+  const crawl = new CrawlNetTruyen(context, resSupplier.data);
+  const data = await crawl.getBookInfo(1, 1);
+  console.log(data[0].data);
   await context.close();
 }
 
